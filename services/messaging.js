@@ -2,13 +2,13 @@ const request = require("./request")
 
 module.exports = {
     handleMessage: (senderId, payload) => {
-        if(payload.text) {
-            
-        }
+        console.log("sender_id: ",senderId);
+        console.log("message: ",payload);
     },
 
     handlePostback: (senderId, payload) => {
-
+        console.log("sender_id: ",senderId);
+        console.log("message: ",payload);
     },
 
     sendMessage: async (senderId, payload) => {
