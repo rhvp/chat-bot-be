@@ -3,7 +3,7 @@ const AppError = require("../config/appError")
 module.exports = {
 
     verify: (req) => {
-        if(req.query.hub_verify_token !== process.env.VERIFY_TOKEN) throw new AppError("invalid verification token", 403);
+        if(req.query.hub.verify_token !== process.env.VERIFY_TOKEN) throw new AppError("invalid verification token", 403);
     }
     
 }

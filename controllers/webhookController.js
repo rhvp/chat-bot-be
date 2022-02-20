@@ -6,7 +6,7 @@ module.exports = {
         try {
             webhook.verify(req);
 
-            return res.send(req.query['hub_challenge']);
+            return res.send(req.query.hub.challenge);
         } catch (error) {
             return next(error);
         }
