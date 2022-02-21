@@ -88,23 +88,38 @@ const respondReturning = async(user, message) => {
 
     else if(userState === 1) {
         let birthdate = message.text;
-        await User.updateOne({id: user.id}, {birthdate, state: 2});
-        let message = {
-            text: state[userState],
-            quick_replies:[
-                {
-                content_type:"text",
-                title:"Yes!!",
-                payload:"yes",
-                },
-                {
-                content_type:"text",
-                title:"No!!",
-                payload:"no",
-                }
-            ]
+        const validDate = validateDate(birthdate);
+
+        if(!validDate) {
+            
+            let payload = {
+                text: "invalid date"
+            }
+
+            await sendMessage(senderId, payload);
         }
-        return await sendPostBack(senderId, message);
+        else {
+
+            await User.updateOne({id: user.id}, {birthdate, state: 2});
+
+            payload = {
+                text: state[userState],
+                quick_replies:[
+                    {
+                    content_type:"text",
+                    title:"Yes!!",
+                    payload:"yes",
+                    },
+                    {
+                    content_type:"text",
+                    title:"No!!",
+                    payload:"no",
+                    }
+                ]
+            }
+
+            return await sendPostBack(senderId, payload);
+        }
     }
 
     let _message;
@@ -119,4 +134,10 @@ const respondReturning = async(user, message) => {
     response.text = _message;
     
     return sendMessage(senderId, response);
+}
+
+
+const validateDate = (date) => {
+    if(!date || !moment(date).isValid()) return false;
+    return true
 }
