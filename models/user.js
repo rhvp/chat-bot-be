@@ -5,8 +5,15 @@ const Schema = new mongoose.Schema({
     name: {
         type: String,
     },
-    user_id: {
+    senderId: {
         type: String,
+    },
+    state: {
+        type: Number,
+        default: 0
+    },
+    birthdate: {
+        type: String
     },
     messages: [
         {
