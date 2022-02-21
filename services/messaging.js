@@ -12,7 +12,7 @@ let state = [
 
 
 module.exports = {
-    handleMessage: (senderId, payload) => {
+    handleMessage: async(senderId, payload) => {
         console.log("message: ",payload);
         let message = payload.text;
         await handleChat(senderId, message);
@@ -107,16 +107,16 @@ const respondReturning = async(user, message) => {
         return await sendPostBack(senderId, message);
     }
 
-    let message;
+    let _message;
 
     if(message === "yes") {
         let diff = moment(user.birthdate).diff(moment(), 'days');
-        message = `There are ${diff} days left untill your next birthday.`;
+        _message = `There are ${diff} days left untill your next birthday.`;
     }
 
-    else message = `Goodbye 👋`;
+    else _message = `Goodbye 👋`;
 
-    response.text = message;
+    response.text = _message;
     
     return sendMessage(senderId, response);
 }
