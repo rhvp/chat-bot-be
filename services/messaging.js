@@ -82,16 +82,16 @@ const respondReturning = async(user, message) => {
 
     if(userState === 0) {
         let name = message.text;
-        if(name && name.length > 0) await User.updateOne({id: user.id}, {name, state: 1});
+        await User.updateOne({id: user.id}, {name, state: 1});
         return await sendMessage(senderId, response);
     }   
 
     else if(userState === 1) {
         let birthdate = message.text;
-        if(birthdate && moment(birthdate).isValid()) await User.updateOne({id: user.id}, {birthdate, state: 2});
+        await User.updateOne({id: user.id}, {birthdate, state: 2});
         let message = {
-        text: state[userState],
-        quick_replies:[
+            text: state[userState],
+            quick_replies:[
                 {
                 content_type:"text",
                 title:"Yes!!",
