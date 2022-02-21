@@ -111,7 +111,7 @@ const respondReturning = async(user, message) => {
 
     if(message === "yes") {
         let diff = moment(user.birthdate).diff(moment(), 'days');
-        message = `There are ${diff} left to your next birthday.`;
+        message = `There are ${diff} days left untill your next birthday.`;
     }
 
     else message = `Goodbye 👋`;
