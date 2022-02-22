@@ -90,9 +90,9 @@ const respondReturning = async(user, message) => {
 
     await saveMessage(user, message);
 
-    if(userState === 0) return await processName(senderId, user, message);
+    if(userState === 0) return await processName(senderId, user, message, response);
 
-    else if(userState === 1) return await processBirthdate(senderId, user, message);
+    else if(userState === 1) return await processBirthdate(senderId, user, message, response);
 
     if(message === "Yes!!") {
         const days = getDaysTillNextBirthdate(user.birthdate);
