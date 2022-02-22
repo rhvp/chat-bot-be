@@ -40,7 +40,7 @@ module.exports = {
     },
 
     getSummary: async () => {
-        const data = await User.find().populate("messages", "text").select("name -_id");
+        const data = await User.find().populate("messages", "text").select("user name -_id");
 
         return data;
     }

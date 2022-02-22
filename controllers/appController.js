@@ -2,6 +2,7 @@ const AppError = require("../config/appError");
 const CONSTANTS = require("../config/constants");
 const messaging = require("../services/messaging");
 const { postProfile } = require("../services/request");
+const util = require("../services/util");
 
 const setupGetStarted = async() => {
     let payload = {
@@ -45,7 +46,9 @@ exports.fetchMessage = async (req, res, next) => {
     try {
         let {id} = req.params;
 
-        if(!id) throw new AppError("id required", 400);
+        const idValid = util.validateObjectId(id);
+
+        if(!idValid) throw new AppError("valid id required", 400);
 
         const response = await messaging.fetchMessage(id);
 
