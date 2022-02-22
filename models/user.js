@@ -5,6 +5,7 @@ const Schema = new mongoose.Schema({
     name: {
         type: String,
     },
+    user: String,
     senderId: {
         type: String,
     },

@@ -1,4 +1,5 @@
 const moment = require("moment");
+const AppError = require("../config/appError");
 const CONSTANTS = require("../config/constants");
 const Message = require("../models/message");
 const User = require("../models/user");
@@ -22,6 +23,26 @@ module.exports = {
         let message = payload.payload;
         if(message === CONSTANTS.APP_START) await respondStart(senderId);
         else handleChat(senderId, message);
+    },
+
+    getMessages: async() => {
+        const data = await Message.find({}).select("text");
+
+        return data;
+    },
+
+    fetchMessage: async(id) => {
+        const data = await Message.findById(id);
+
+        if(!data) throw new AppError("message not found", 404);
+
+        return data;
+    },
+
+    getSummary: async () => {
+        const data = await User.find().populate("messages", "text").select("name -_id");
+
+        return data;
     }
 }
 
@@ -69,7 +90,7 @@ const respondStart = async(senderId) => {
         text: "What is your firstname?"
     }
 
-    await User.create({ senderId });
+    await User.create({ user: senderId, name: "", senderId });
 
     await sendMessage(senderId, response);
 }
