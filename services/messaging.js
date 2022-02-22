@@ -90,9 +90,9 @@ const respondReturning = async(user, message) => {
 
     await saveMessage(user, message);
 
-    if(userState === 0) return await processName(user, message);
+    if(userState === 0) return await processName(senderId, user, message);
 
-    else if(userState === 1) return await processBirthdate(user, message);
+    else if(userState === 1) return await processBirthdate(senderId, user, message);
 
     if(message === "Yes!!") {
         const days = getDaysTillNextBirthdate(user.birthdate);
@@ -152,7 +152,7 @@ const saveMessage = async (user, message) => {
 }
 
 
-const processName = async (user, message, response) => {
+const processName = async (senderId, user, message, response) => {
     let name = message;
 
     await User.updateOne({id: user.id}, {name, state: 1});
@@ -161,7 +161,7 @@ const processName = async (user, message, response) => {
 }
 
 
-const processBirthdate = async (user, message, response) => {
+const processBirthdate = async (senderId, user, message, response) => {
     let birthdate = message;
 
     const validDate = validateDate(birthdate);
@@ -174,6 +174,8 @@ const processBirthdate = async (user, message, response) => {
     }
     else {
         await User.updateOne({id: user.id}, {birthdate, state: 2});
+
+        const userState = user.state;
 
         payload = {
             text: state[userState],
