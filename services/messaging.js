@@ -81,13 +81,13 @@ const respondReturning = async(user, message) => {
     }
 
     if(userState === 0) {
-        let name = message.text;
+        let name = message;
         await User.updateOne({id: user.id}, {name, state: 1});
         return await sendMessage(senderId, response);
     }   
 
     else if(userState === 1) {
-        let birthdate = message.text;
+        let birthdate = message;
         const validDate = validateDate(birthdate);
 
         if(!validDate) {
@@ -96,7 +96,7 @@ const respondReturning = async(user, message) => {
                 text: "invalid date"
             }
 
-            await sendMessage(senderId, payload);
+            return await sendMessage(senderId, payload);
         }
         else {
 
