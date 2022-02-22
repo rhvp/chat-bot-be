@@ -17,6 +17,11 @@ const setupGetStarted = async() => {
 exports.initializeApp = async(req, res, next) => {
     try {
         await setupGetStarted();
+
+        return res.status(200).json({
+            status: "success",
+            message: "App Initialized"
+        })
     } catch (error) {
         return next(error);
     }
