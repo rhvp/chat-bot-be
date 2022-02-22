@@ -93,11 +93,9 @@ const respondReturning = async(user, message) => {
 
         if(!validDate) {
 
-            let payload = {
-                text: "invalid date"
-            }
+            response.text = "invalid date";
 
-            return await sendMessage(senderId, payload);
+            return await sendMessage(senderId, response);
         }
         else {
 
