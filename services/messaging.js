@@ -124,8 +124,8 @@ const respondReturning = async(user, message) => {
     let _message;
 
     if(message === "Yes!!") {
-        let diff = moment(user.birthdate).diff(moment(), 'days');
-        _message = `There are ${diff} days left untill your next birthday.`;
+        const days = getDaysTillNextBirthdate(user.birthdate);
+        _message = `There are ${days} days left untill your next birthday.`;
     }
 
     else _message = `Goodbye 👋`;
@@ -137,6 +137,22 @@ const respondReturning = async(user, message) => {
 
 
 const validateDate = (date) => {
+    console.log(moment(date).isValid());
     if(!date || !moment(date).isValid()) return false;
     return true
+}
+
+const getDaysTillNextBirthdate = (birthdate) => {
+    let year = moment().year();
+
+    let monthDate = birthdate.substring(5);
+
+    let nextBirthdate = moment(`${year}-${monthDate}`);
+
+    if(nextBirthdate.isBefore(moment())) {
+        year++;
+        nextBirthdate = moment(`${year}-${monthDate}`);
+    }
+
+    return nextBirthdate.diff(moment(), 'd');
 }
