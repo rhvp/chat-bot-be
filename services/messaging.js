@@ -63,6 +63,7 @@ const handleChat = async (senderId, message) => {
 
 
 const respondStart = async(senderId) => {
+    await User.deleteOne({ senderId });
     let response = {
         text: "What is your firstname?"
     }
@@ -124,7 +125,7 @@ const respondReturning = async(user, message) => {
 
     let _message;
 
-    if(message === "yes") {
+    if(message === "Yes!!") {
         let diff = moment(user.birthdate).diff(moment(), 'days');
         _message = `There are ${diff} days left untill your next birthday.`;
     }
