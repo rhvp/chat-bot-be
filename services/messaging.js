@@ -91,7 +91,7 @@ const respondReturning = async(user, message) => {
         const validDate = validateDate(birthdate);
 
         if(!validDate) {
-            
+
             let payload = {
                 text: "invalid date"
             }
