@@ -110,9 +110,9 @@ const validateDate = (date) => {
 
     if(!date || !moment(date).isValid()) return false;
 
-    const date = moment(date).format('YYYY-MM-DD');
+    const validDate = moment(date).format('YYYY-MM-DD');
 
-    return date
+    return validDate;
 }
 
 
