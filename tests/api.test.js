@@ -3,11 +3,11 @@ const supertest = require("supertest");
 const app = require('../app');
 const Message = require('../models/message');
 const User = require("../models/user");
-
+require("dotenv").config();
 jest.setTimeout(10000)
 
 beforeAll((done) => {
-    mongoose.connect("mongodb+srv://sody-boy:rhap95@my-cluster-01-a0hk3.mongodb.net/chat-test?retryWrites=true&w=majority",
+    mongoose.connect(process.env.MONGO_TEST_URL,
       { useNewUrlParser: true, useUnifiedTopology: true },
       () => done());
   });
