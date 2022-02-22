@@ -88,62 +88,18 @@ const respondReturning = async(user, message) => {
         text
     }
 
-    const messageObj = await Message.create({text: message, user: user.id});
+    await saveMessage(user, message);
 
-    await User.updateOne({id: user.id}, {
-        $push: {messages: messageObj._id}
-    })
+    if(userState === 0) return await processName(user, message);
 
-    if(userState === 0) {
-        let name = message;
-        await User.updateOne({id: user.id}, {name, state: 1});
-        return await sendMessage(senderId, response);
-    }   
-
-    else if(userState === 1) {
-        let birthdate = message;
-        const validDate = validateDate(birthdate);
-
-        if(!validDate) {
-
-            response.text = "invalid date";
-
-            return await sendMessage(senderId, response);
-        }
-        else {
-
-            await User.updateOne({id: user.id}, {birthdate, state: 2});
-
-            payload = {
-                text: state[userState],
-                quick_replies:[
-                    {
-                    content_type:"text",
-                    title:"Yes!!",
-                    payload:"yes",
-                    },
-                    {
-                    content_type:"text",
-                    title:"No!!",
-                    payload:"no",
-                    }
-                ]
-            }
-
-            return await sendPostBack(senderId, payload);
-        }
-    }
-
-    let _message;
+    else if(userState === 1) return await processBirthdate(user, message);
 
     if(message === "Yes!!") {
         const days = getDaysTillNextBirthdate(user.birthdate);
-        _message = `There are ${days} days left untill your next birthday.`;
+        response.text = `There are ${days} days left untill your next birthday.`;
     }
 
-    else _message = `Goodbye 👋`;
-
-    response.text = _message;
+    else response.text = `Goodbye 👋`;
     
     return sendMessage(senderId, response);
 }
@@ -153,9 +109,12 @@ const validateDate = (date) => {
     console.log(moment(date).isValid());
 
     if(!date || !moment(date).isValid()) return false;
-    
-    return true
+
+    const date = moment(date).format('YYYY-MM-DD');
+
+    return date
 }
+
 
 const getDaysTillNextBirthdate = (birthdate) => {
     let year = moment().year();
@@ -181,4 +140,57 @@ const clearUser = async (senderId) => {
     await User.deleteOne({ id: user.id });
 
     await Message.deleteMany({user: user.id});
+}
+
+
+const saveMessage = async (user, message) => {
+    const messageObj = await Message.create({text: message, user: user.id});
+
+    await User.updateOne({id: user.id}, {
+        $push: {messages: messageObj._id}
+    })
+}
+
+
+const processName = async (user, message, response) => {
+    let name = message;
+
+    await User.updateOne({id: user.id}, {name, state: 1});
+
+    return await sendMessage(senderId, response);
+}
+
+
+const processBirthdate = async (user, message, response) => {
+    let birthdate = message;
+
+    const validDate = validateDate(birthdate);
+
+    if(!validDate) {
+
+        response.text = "invalid date";
+
+        return await sendMessage(senderId, response);
+    }
+    else {
+        await User.updateOne({id: user.id}, {birthdate, state: 2});
+
+        payload = {
+            text: state[userState],
+            quick_replies:[
+                {
+                content_type:"text",
+                title:"Yes!!",
+                payload:"yes",
+                },
+                {
+                content_type:"text",
+                title:"No!!",
+                payload:"no",
+                }
+            ]
+        }
+
+        return await sendPostBack(senderId, payload);
+    }
 }
