@@ -1,5 +1,6 @@
 const moment = require("moment");
 const CONSTANTS = require("../config/constants");
+const Message = require("../models/message");
 const User = require("../models/user");
 const request = require("./request");
 
@@ -13,13 +14,11 @@ let state = [
 
 module.exports = {
     handleMessage: async(senderId, payload) => {
-        console.log("message: ",payload);
         let message = payload.text;
         await handleChat(senderId, message);
     },
 
     handlePostback: async (senderId, payload) => {
-        console.log(payload);
         let message = payload.payload;
         if(message === CONSTANTS.APP_START) await respondStart(senderId);
         else handleChat(senderId, message);
@@ -49,6 +48,7 @@ const sendPostBack = async (senderId, payload) => {
           messaging_type: "RESPONSE",
           message: payload
     }
+
     await request.postMessage(body);
 }
 
@@ -63,23 +63,36 @@ const handleChat = async (senderId, message) => {
 
 
 const respondStart = async(senderId) => {
-    await User.deleteOne({ senderId });
+    await clearUser(senderId);
+
     let response = {
         text: "What is your firstname?"
     }
+
     await User.create({ senderId });
+
     await sendMessage(senderId, response);
 }
 
 
 const respondReturning = async(user, message) => {
     let text;
+
     const userState = user.state;
+
     const senderId = user.senderId;
+
     text = state[userState];
+
     let response = {
         text
     }
+
+    const messageObj = await Message.create({text: message, user: user.id});
+
+    await User.updateOne({id: user.id}, {
+        $push: {messages: messageObj._id}
+    })
 
     if(userState === 0) {
         let name = message;
@@ -138,7 +151,9 @@ const respondReturning = async(user, message) => {
 
 const validateDate = (date) => {
     console.log(moment(date).isValid());
+
     if(!date || !moment(date).isValid()) return false;
+    
     return true
 }
 
@@ -155,4 +170,15 @@ const getDaysTillNextBirthdate = (birthdate) => {
     }
 
     return nextBirthdate.diff(moment(), 'd');
+}
+
+
+const clearUser = async (senderId) => {
+    const user = await User.findOne({ senderId });
+
+    if(!user) return;
+
+    await User.deleteOne({ id: user.id });
+
+    await Message.deleteMany({user: user.id});
 }
