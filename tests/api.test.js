@@ -50,3 +50,41 @@ test("Summary", async () => {
             expect(Array.isArray(res.body.data[0].messages)).toBeTruthy();
         })
 })
+
+test("Message Correct Payload", async () => {
+    await supertest(app).post("/api/webhooks")
+        .send({
+            "object": "page",
+            "entry": [
+                {
+                    "id": "PAGE_ID",
+                    "time": 12132322,
+                    "messaging": [
+                        {
+                            "sender":{
+                                "id":"<PSID>"
+                              },
+                              "recipient":{
+                                "id":"<PAGE_ID>"
+                              },
+                        }
+                    ]
+                }
+            ]
+        })
+        .expect(200)
+        .then(res => {
+            expect(res.body.status).toBe("success")
+        })
+})
+
+test("Message Bad Payload", async () => {
+    await supertest(app).post("/api/webhooks")
+        .send({
+            "object": "wrong"
+        })
+        .expect(404)
+        .then(res => {
+            expect(res.body.error.message).toBe("unsupported function");
+        })
+})
