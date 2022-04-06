@@ -11,6 +11,8 @@ let state = [
     "Would you like to know how many days there are till your next birthday?"
 ]
 
+let positiveResponses = ["yeah", "ya", "yes", "yup"];
+
 
 
 module.exports = {
@@ -115,12 +117,14 @@ const respondReturning = async(user, message) => {
 
     else if(userState === 1) return await processBirthdate(senderId, user, message, response);
 
-    if(message === "Yes!!") {
+    let postiveIndex = positiveResponses.indexOf(message.toLowerCase());
+
+    if(postiveIndex < 0) response.text = `Goodbye 👋`;
+    
+    else {
         const days = getDaysTillNextBirthdate(user.birthdate);
         response.text = `There are ${days} days left untill your next birthday.`;
     }
-
-    else response.text = `Goodbye 👋`;
     
     return sendMessage(senderId, response);
 }
@@ -200,20 +204,20 @@ const processBirthdate = async (senderId, user, message, response) => {
 
         payload = {
             text: state[userState],
-            quick_replies:[
-                {
-                content_type:"text",
-                title:"Yes!!",
-                payload:"yes",
-                },
-                {
-                content_type:"text",
-                title:"No!!",
-                payload:"no",
-                }
-            ]
+            //     {
+            //     content_type:"text",
+            //     title:"Yes!!",
+            //     payload:"yes",
+            //     },
+            //     {
+            //     content_type:"text",
+            //     title:"No!!",
+            //     payload:"no",
+            //     }
+            // ]// quick_replies:[
+            
         }
 
-        return await sendPostBack(senderId, payload);
+        return await sendMessage(senderId, payload);
     }
 }
