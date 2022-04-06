@@ -44,8 +44,8 @@ GET /summary
 ## Links
 
 ```
-Documentation: 
+API Documentation: https://documenter.getpostman.com/view/7534999/UVyvvEKv
 
-Public Base URL:
+Public Base URL: https://fb-bot-be.herokuapp.com
 
 ```

@@ -11,7 +11,7 @@ let state = [
     "Would you like to know how many days there are till your next birthday?"
 ]
 
-let positiveResponses = ["yeah", "ya", "yes", "yup", "yep", "yeh", "yah"];
+let positiveResponses = ["yeah", "ya", "yes", "yup", "yep", "yeh", "yah", "ye"];
 
 
 
