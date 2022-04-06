@@ -11,7 +11,7 @@ let state = [
     "Would you like to know how many days there are till your next birthday?"
 ]
 
-let positiveResponses = ["yeah", "ya", "yes", "yup"];
+let positiveResponses = ["yeah", "ya", "yes", "yup", "yep", "yeh", "yah"];
 
 
 
@@ -131,13 +131,13 @@ const respondReturning = async(user, message) => {
 
 
 const validateDate = (date) => {
-    console.log(moment(date).isValid());
+    const validated = moment(date, 'YYYY-MM-DD', true).isValid();
 
-    if(!date || !moment(date).isValid()) return false;
+    if(!date || !validated) return false;
 
-    const validDate = moment(date).format('YYYY-MM-DD');
+    if(moment(date).isSameOrAfter(moment(), "day")) return false
 
-    return validDate;
+    return moment(date).format('YYYY-MM-DD');
 }
 
 
@@ -193,7 +193,7 @@ const processBirthdate = async (senderId, user, message, response) => {
 
     if(!validDate) {
 
-        response.text = "invalid date";
+        response.text = "invalid birthdate. use format 'YYYY-MM-DD'";
 
         return await sendMessage(senderId, response);
     }

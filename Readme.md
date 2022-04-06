@@ -40,3 +40,12 @@ GET /api/messages/:id
 GET /summary
 
 ```
+
+## Links
+
+```
+Documentation: 
+
+Public Base URL:
+
+```
