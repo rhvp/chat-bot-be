@@ -203,19 +203,7 @@ const processBirthdate = async (senderId, user, message, response) => {
         const userState = user.state;
 
         payload = {
-            text: state[userState],
-            //     {
-            //     content_type:"text",
-            //     title:"Yes!!",
-            //     payload:"yes",
-            //     },
-            //     {
-            //     content_type:"text",
-            //     title:"No!!",
-            //     payload:"no",
-            //     }
-            // ]// quick_replies:[
-            
+            text: state[userState]
         }
 
         return await sendMessage(senderId, payload);
