@@ -20,8 +20,8 @@ npm test
 Required environment variables;
 * PAGE_TOKEN - Facebook page token from app dashboard
 * VERIFY_TOKEN - webhook verification token
-* MONGO_URL - Database url in format mongodb+srv://username:password@host/dbname?retryWrites=true&w=majority
-* MONGO_TEST_URL - Test database url. Same format as MONGO_URL.
+* MONGO_URL - Database connection url 
+* MONGO_TEST_URL - Unit test database url. Same format as MONGO_URL.
 ```
 
 ## Initialize Get Started Button
